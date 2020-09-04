@@ -2,10 +2,21 @@
 import React, { useState } from 'react';
 import {Col} from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart, faStar, faVideo} from '@fortawesome/free-solid-svg-icons'
+import { 
+  faHeart, 
+  faStar, 
+  faVideo
+} from '@fortawesome/free-solid-svg-icons'
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Badge
+    Card, 
+    CardImg, 
+    CardText, 
+    CardBody,
+    CardTitle, 
+    CardSubtitle, 
+    Badge,
+    Button, 
+    Collapse 
   } from 'reactstrap';
   
 
@@ -19,7 +30,7 @@ import {
     const [countWatchMovie, setCcountWatchMovie] = useState(0)
     const [myRatingMovie, setMyRatingMovie]= useState(0)
     const [isVoted, setIsVoted] = useState(0)
-   
+    
     const toggleLike = (nameFromFront, imgFromFront) =>{
       if(props.isAlreadyLiked){
         props.handleClickDeleteMovieParent(nameFromFront)
@@ -30,7 +41,6 @@ import {
 
     let colorLiked = ''
       if(props.isAlreadyLiked){
-        console.log('color')
         colorLiked = '#e74c3c'
       }
     
@@ -86,13 +96,17 @@ import {
     }
     const voteNumber = props.globalCountRating + isVoted
     
-    
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = () => setIsOpen(!isOpen);
 
       return (
-           <Col style={{marginBottom:5}} xs="12" md="8" lg="4">         
+           <Col style={{marginBottom:15}} xs="12" md="6" lg="4">         
               <Card  >
-                <CardImg top width="100%" src={`/img${props.movieImg}`} alt="RdN" />
+                <CardImg top width="100%" src={props.movieImg} alt="RdN" />
                 <CardBody style={{padding:10}}>
+                  <div  style={{textAlign:'center', height:'3rem'}}>
+                    <CardText><strong>{props.movieName}</strong> </CardText>
+                  </div>
                   <CardTitle onClick={()=>toggleLike(props.movieName, props.movieImg)} >Like
                     <FontAwesomeIcon  style={fontIconStyle} icon={faHeart} />
                     </CardTitle> 
@@ -108,14 +122,20 @@ import {
                   <CardText> Moyenne {voteTab} 
                   </CardText>
                   <CardText> Global avis {noteGlobal}  
-                  <Badge>{voteNumber}</Badge>
                   </CardText> 
-                  <CardText> {props.movieName}</CardText>
-                  <CardText> {props.desc} </CardText>
-
+                  <CardText> Nombre d'avis'
+                  <Badge  style={{margin:'0 5px'}}> {voteNumber}</Badge>
+                  </CardText> 
+                  <Button color="info" onClick={toggle} style={{ marginBottom: '0.5rem' }}>Resumé</Button>
+                    <Collapse isOpen={isOpen}>
+                      <Card>
+                        <CardBody  style={{ fontSize: '0.9rem' , padding:10}}>
+                        {props.movieDesc}
+                        </CardBody>
+                      </Card>
+                    </Collapse>
                 </CardBody>
               </Card>
-          
           </Col>
           );
     };
