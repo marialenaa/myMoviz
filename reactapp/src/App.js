@@ -17,6 +17,14 @@ const toggle = () => setPopoverOpen(!popoverOpen);
     const rawResponse = await fetch('/newmovies');
     const response = await rawResponse.json()
     setMoviesData(response.movies)
+
+    const getWishList = await fetch('/wishlist')
+    const wishlistReponse = await getWishList.json()
+    const movieFromDB = wishlistReponse.movies.map((movie, i) => {
+      return {name:movie.name, img:movie.img }
+    })
+    setMoviesWishList(movieFromDB)
+    setMoviesCount(movieFromDB.length)
   }
   getMoviesData()
 },[])

@@ -2,21 +2,15 @@ var express = require('express');
 var router = express.Router();
 var request = require('sync-request')
 var movieModel = require('../models/movies')
-
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   console.log('hello')
-//   res.render('index', { title: 'Express' });
-// });
+var myApiKey = "f66883e275f3268e4f6d307f690060f2"
 
 router.get('/newmovies', function(req, res, next) {
-var getDataMovies = request("GET", 'https://api.themoviedb.org/3/movie/popular?api_key=f66883e275f3268e4f6d307f690060f2&language=fr-FR&sort_by=popularity.desc')
+var getDataMovies = request("GET", `https://api.themoviedb.org/3/movie/popular?api_key=${myApiKey}&language=fr-FR&sort_by=popularity.desc`)
 var getDataMoviesJson = JSON.parse(getDataMovies.getBody())
   res.json({result: true, movies:getDataMoviesJson.results});
 });
 
 router.post('/addmovie', async function(req, res, next) {
-  
   console.log(req.body.name,'jjjjjjjjjjjjjjj')
   var addMovie = new movieModel ({
     name : req.body.nameFromFront,
@@ -41,17 +35,17 @@ router.delete('/deletemovie/:name', async function(req, res, next) {
 });
 
 
+router.get('/wishlist', async function(req, res, next) {
+  var movies = await movieModel.find()
 
-
-router.put('/wishlist', async function(req, res, next) {
-  var wishList = await movieModel.find()
-
-  console.log(wishList, 'wishlist')
+  console.log(movies, 'movie')
 
   var result = false
-  if(wishList.length){
+  if(movies.length){
     result = true 
   }
-  res.json({result,wishList});
+  res.json({result,movies});
 });
+
+
 module.exports = router;
